@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Car, MapPin, Calendar, Users, Upload } from 'lucide-react';
 import type { PartnerType } from '../../types';
 
 interface DetailsFormProps {
@@ -12,19 +11,15 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
     switch (type) {
       case 'tour':
         return {
-          destinations: [''],
+          packageTypes: [],
+          customPackageType: '',
           bio: '',
         };
       case 'vehicle':
         return {
-          vehicleTypes: [''],
+          vehicleTypes: [],
+          customVehicleType: '',
           numberOfVehicles: '',
-          serviceAreas: [''],
-        };
-      case 'strangers':
-        return {
-          eventType: '',
-          capacity: '',
           bio: '',
         };
       default:
@@ -32,27 +27,22 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
     }
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleArrayInputChange = (index: number, value: string, field: string) => {
-    setFormData(prev => ({
+  const addArrayItem = (field: string, value: string) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].map((item: string, i: number) => (i === index ? value : item)),
-    }));
-  };
-
-  const addArrayItem = (field: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], ''],
+      [field]: [...prev[field], value],
+      customPackageType: '', // Clear custom input
+      customVehicleType: '',
     }));
   };
 
   const removeArrayItem = (index: number, field: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: prev[field].filter((_: string, i: number) => i !== index),
     }));
@@ -62,44 +52,65 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
     <>
       <div>
         <label className="block text-lg font-medium text-white mb-4">
-          Servicing Destinations
+          Types of Packages Providing
         </label>
-        {formData.destinations.map((dest: string, index: number) => (
+        <div className="flex gap-2 mb-4">
+          <select
+            onChange={(e) => addArrayItem('packageTypes', e.target.value)}
+            className="flex-1 rounded-full bg-[#111111] px-4 py-3 text-white"
+          >
+            <option value="" disabled selected>
+              Select a package type
+            </option>
+            <option value="Adventure Tours">Adventure Tours</option>
+            <option value="Family Packages">Family Packages</option>
+            <option value="Honeymoon Packages">Honeymoon Packages</option>
+            <option value="Corporate Tours">Corporate Tours</option>
+            <option value="Solo Tours">Solo Tours</option>
+          </select>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <input
+            type="text"
+            name="customPackageType"
+            value={formData.customPackageType}
+            onChange={handleInputChange}
+            className="flex-1 rounded-full bg-[#111111] px-4 py-3 text-white"
+            placeholder="Add a custom package type"
+          />
+          <button
+            type="button"
+            onClick={() => addArrayItem('packageTypes', formData.customPackageType)}
+            disabled={!formData.customPackageType}
+            className="px-4 py-2 bg-[#37e5a5]/10 text-[#37e5a5] rounded-full"
+          >
+            Add
+          </button>
+        </div>
+        {formData.packageTypes.map((type: string, index: number) => (
           <div key={index} className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={dest}
-              onChange={(e) => handleArrayInputChange(index, e.target.value, 'destinations')}
-              className="flex-1 rounded-full bg-[#111111]  px-4 py-3 text-white"
-              placeholder="Enter destination"
-            />
-            {formData.destinations.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeArrayItem(index, 'destinations')}
-                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-full"
-              >
-                Remove
-              </button>
-            )}
+            <span className="flex-1 rounded-full bg-[#222222] px-4 py-3 text-white">
+              {type}
+            </span>
+            <button
+              type="button"
+              onClick={() => removeArrayItem(index, 'packageTypes')}
+              className="px-4 py-2 bg-red-500/10 text-red-500 rounded-full"
+            >
+              Remove
+            </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => addArrayItem('destinations')}
-          className="mt-2 px-4 py-2 bg-[#37e5a5]/10 text-[#37e5a5] rounded-full"
-        >
-          Add Destination
-        </button>
       </div>
       <div>
         <label className="block text-lg font-medium text-white mb-2">
           About the Business
         </label>
         <textarea
+          name="bio"
           value={formData.bio}
-          onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-          className="w-full rounded-xl bg-[#111111]  px-4 py-3 text-white"
+          onChange={handleInputChange}
+          className="w-full rounded-xl bg-[#111111] px-4 py-3 text-white"
           rows={4}
           placeholder="Write about your services..."
         />
@@ -110,39 +121,58 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
   const renderVehicleForm = () => (
     <>
       <div>
-        <label className="block text-sm font-medium text-gray-200">
+        <label className="block text-lg font-medium text-white mb-4">
           Vehicle Types
         </label>
-        {formData.vehicleTypes.map((type, index) => (
+        <div className="flex gap-2 mb-4">
+          <select
+            onChange={(e) => addArrayItem('vehicleTypes', e.target.value)}
+            className="flex-1 rounded-full bg-[#111111] px-4 py-3 text-white"
+          >
+            <option value="" disabled selected>
+              Select a vehicle type
+            </option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Bus">Bus</option>
+            <option value="Tempo Traveller">Tempo Traveller</option>
+          </select>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <input
+            type="text"
+            name="customVehicleType"
+            value={formData.customVehicleType}
+            onChange={handleInputChange}
+            className="flex-1 rounded-full bg-[#111111] px-4 py-3 text-white"
+            placeholder="Add a custom vehicle type"
+          />
+          <button
+            type="button"
+            onClick={() => addArrayItem('vehicleTypes', formData.customVehicleType)}
+            disabled={!formData.customVehicleType}
+            className="px-4 py-2 bg-[#37e5a5]/10 text-[#37e5a5] rounded-full"
+          >
+            Add
+          </button>
+        </div>
+        {formData.vehicleTypes.map((type: string, index: number) => (
           <div key={index} className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={type}
-              onChange={(e) => handleArrayInputChange(index, e.target.value, 'vehicleTypes')}
-              className="flex-1 rounded-full bg-[#111111]  px-4 py-3 text-white"
-              placeholder="Enter vehicle type"
-            />
-            {formData.vehicleTypes.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeArrayItem(index, 'vehicleTypes')}
-                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-full"
-              >
-                Remove
-              </button>
-            )}
+            <span className="flex-1 rounded-full bg-[#222222] px-4 py-3 text-white">
+              {type}
+            </span>
+            <button
+              type="button"
+              onClick={() => removeArrayItem(index, 'vehicleTypes')}
+              className="px-4 py-2 bg-red-500/10 text-red-500 rounded-full"
+            >
+              Remove
+            </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => addArrayItem('vehicleTypes')}
-          className="mt-2 px-4 py-2 bg-[#37e5a5]/10 text-[#37e5a5] rounded-full"
-        >
-          Add Vehicle Type
-        </button>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-200">
+        <label className="block text-lg font-medium text-white mb-2">
           Number of Vehicles
         </label>
         <input
@@ -150,75 +180,8 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
           name="numberOfVehicles"
           value={formData.numberOfVehicles}
           onChange={handleInputChange}
-          className="mt-1 w-full rounded-full bg-[#111111]   px-4 py-3 text-white"
+          className="w-full rounded-full bg-[#111111] px-4 py-3 text-white"
           placeholder="Enter number of vehicles"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-200">
-          Service Areas
-        </label>
-        {formData.serviceAreas.map((area: string, index: number) => (
-          <div key={index} className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={area}
-              onChange={(e) => handleArrayInputChange(index, e.target.value, 'serviceAreas')}
-              className="flex-1 rounded-full bg-[#111111]   px-4 py-3 text-white"
-              placeholder="Enter service area"
-            />
-            {formData.serviceAreas.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeArrayItem(index, 'serviceAreas')}
-                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-full"
-              >
-                Remove
-              </button>
-            )}
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => addArrayItem('serviceAreas')}
-          className="mt-2 px-4 py-2 bg-[#37e5a5]/10 text-[#37e5a5] rounded-full"
-        >
-          Add Service Area
-        </button>
-      </div>
-    </>
-  );
-
-  const renderStrangersForm = () => (
-    <>
-      <div>
-        <label className="block text-lg font-medium text-white mb-4">
-          Event Type
-        </label>
-        <select
-          name="eventType"
-          value={formData.eventType}
-          onChange={handleInputChange}
-          className="w-full rounded-full bg-[#111111]   px-4 py-3 text-white"
-        >
-          <option value="">Select an event type</option>
-          <option value="camping">Camping</option>
-          <option value="meetup">Meetup</option>
-          <option value="tour">Tour</option>
-          <option value="ride">Ride</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-200">
-          Capacity
-        </label>
-        <input
-          type="number"
-          name="capacity"
-          value={formData.capacity}
-          onChange={handleInputChange}
-          className="mt-1 w-full rounded-full bg-[#111111]   px-4 py-3 text-white"
-          placeholder="Enter event capacity"
         />
       </div>
       <div>
@@ -226,13 +189,15 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
           About the Business
         </label>
         <textarea
+          name="bio"
           value={formData.bio}
-          onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-          className="w-full rounded-xl bg-[#111111]  px-4 py-3 text-white"
+          onChange={handleInputChange}
+          className="w-full rounded-xl bg-[#111111] px-4 py-3 text-white"
           rows={4}
-          placeholder="Write about your services..."
+          placeholder="Write about your business and services..."
         />
       </div>
+     
     </>
   );
 
@@ -245,7 +210,6 @@ export function DetailsForm({ type, onSubmit }: DetailsFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {type === 'tour' && renderTourForm()}
       {type === 'vehicle' && renderVehicleForm()}
-      {type === 'strangers' && renderStrangersForm()}
 
       <button
         type="submit"

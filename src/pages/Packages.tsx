@@ -1,6 +1,6 @@
 import { SearchBar } from '../components/home/SearchBar';
 import { PackageCard } from '../components/ui/PackageCard';
-import { Filter, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 
 const packages = [
   {
@@ -10,7 +10,12 @@ const packages = [
     duration: '7 days',
     price: 899,
     rating: 4.8,
-    reviews: 324
+    reviews: 324,
+    location: 'Bali, Indonesia',
+    groupSize: '2-12 people',
+    meals: 'All meals included',
+    accommodation: '4-star hotels',
+    transport: 'Flights + transfers'
   },
   {
     id: 2,
@@ -19,15 +24,19 @@ const packages = [
     duration: '10 days',
     price: 1299,
     rating: 4.9,
-    reviews: 512
+    reviews: 512,
+    location: 'Japan',
+    groupSize: '4-10 people',
+    meals: 'Breakfast included',
+    accommodation: 'Traditional ryokans',
+    transport: 'Bullet train passes'
   },
-  // Add more packages...
 ];
 
 export function Packages() {
   return (
     <div className="min-h-screen bg-background text-white pt-20 pb-24">
-      <div className="container mx-auto px-4 space-y-6">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-32 space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Travel Packages</h1>
           <button className="flex items-center space-x-2 px-4 py-2 rounded-full bg-card hover:bg-card-hover">
@@ -49,7 +58,7 @@ export function Packages() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex flex-col space-y-8">
           {packages.map((pkg) => (
             <PackageCard key={pkg.id} {...pkg} />
           ))}

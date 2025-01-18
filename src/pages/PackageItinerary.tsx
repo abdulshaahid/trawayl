@@ -158,7 +158,7 @@ console.log(packageData.price_per_person)
           <span>Need help? Contact us</span>
         </button>
 
-        <div className="sticky bottom-20">
+        <div className="sticky bottom-20 z-40">
           <button
             onClick={() => navigate('/booking')}
             className="w-full bg-[#37e5a5] text-black font-bold py-4 rounded-full hover:bg-[#2bc88d] transition-colors"

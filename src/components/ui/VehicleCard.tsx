@@ -1,4 +1,4 @@
-import { Star, Users } from 'lucide-react';
+import { Star, Users, Wifi, Thermometer, Navigation, Shield } from 'lucide-react';
 
 interface VehicleCardProps {
   image: string;
@@ -11,34 +11,68 @@ interface VehicleCardProps {
 }
 
 export function VehicleCard({ image, title, seats, features, price, rating, reviews }: VehicleCardProps) {
+  const getFeatureIcon = (feature: string) => {
+    switch (feature.toLowerCase()) {
+      case 'wifi':
+        return <Wifi className="w-4 h-4" />;
+      case 'ac':
+        return <Thermometer className="w-4 h-4" />;
+      case 'gps':
+        return <Navigation className="w-4 h-4" />;
+      default:
+        return <Shield className="w-4 h-4" />;
+    }
+  };
+
   return (
-    <div className="flex-none w-72">
-      <div className="bg-card rounded-lg overflow-hidden group">
-        <div className="relative">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-          <button className="absolute top-4 right-4 p-2 rounded-full bg-background/50 hover:bg-background/80 transition-colors">
-            <Star className="w-5 h-5 text-white" />
-          </button>
-        </div>
-        <div className="p-4">
-          <h3 className="font-semibold mb-1 line-clamp-2">{title}</h3>
-          <div className="flex items-center space-x-1 text-sm text-gray-400 mb-2">
-            <Users className="w-4 h-4" />
-            <span>{seats} seats</span>
-            <span>•</span>
-            <span>{features.join(' • ')}</span>
+    <div className="w-full max-w-4xl mx-auto bg-card rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="flex flex-col sm:flex-row h-full">
+        {/* Image container with fixed aspect ratio */}
+        <div className="w-full sm:w-2/5 lg:w-1/3 relative">
+          <div className="aspect-[4/3] sm:h-full">
+            <img
+              src={image}
+              alt={title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
-          <div className="flex items-center justify-between">
+        </div>
+
+        {/* Content container */}
+        <div className="w-full sm:w-3/5 lg:w-2/3 p-4 sm:p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="font-semibold text-lg line-clamp-1 mb-1">{title}</h3>
+              <div className="flex items-center text-sm text-gray-400">
+                <Users className="w-4 h-4 mr-1" />
+                <span>{seats} seats</span>
+              </div>
+            </div>
             <div className="flex items-center space-x-1 text-sm">
               <Star className="w-4 h-4 fill-primary text-primary" />
               <span>{rating.toFixed(1)}</span>
               <span className="text-gray-400">({reviews})</span>
             </div>
-            <p className="text-primary font-bold">${price}/day</p>
+          </div>
+
+          {/* Features grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center text-sm text-gray-400">
+                {getFeatureIcon(feature)}
+                <span className="ml-2">{feature}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between mt-auto">
+            <div>
+              <p className="text-sm text-gray-400">Price per day</p>
+              <p className="text-primary text-xl font-bold">${price}</p>
+            </div>
+            <button className="bg-primary text-black py-2 px-6 rounded-full hover:bg-primary/90 transition-colors">
+              Book Now
+            </button>
           </div>
         </div>
       </div>

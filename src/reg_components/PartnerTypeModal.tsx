@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Users, Mountain } from 'lucide-react';
+import { Car, Mountain } from 'lucide-react';
 import type { PartnerType } from '../types';
 
 interface PartnerTypeModalProps {
@@ -21,12 +21,6 @@ export function PartnerTypeModal({ onSelect, onClose }: PartnerTypeModalProps) {
       description: 'Provide transportation services.',
       icon: Car,
     },
-    {
-      type: 'strangers' as const,
-      title: 'Strangers Meetup Partner',
-      description: 'Host social events and meetups.',
-      icon: Users,
-    },
   ];
 
   return (
@@ -42,7 +36,7 @@ export function PartnerTypeModal({ onSelect, onClose }: PartnerTypeModalProps) {
         </button>
 
         {/* Title */}
-        <h2 className="text-lg font-bold text-white mb-4">
+        <h2 className="text-lg font-bold text-[#d0d0d0] mb-4">
           Select the service you want to register for
         </h2>
 
@@ -51,7 +45,7 @@ export function PartnerTypeModal({ onSelect, onClose }: PartnerTypeModalProps) {
           {options.map(({ type, title, description, icon: Icon }) => (
             <div
               key={type}
-              className="flex items-center gap-4 p-4 rounded-lg bg-[#111111] border border-[#111111] hover:border-[#37e5a5] hover:bg-[#1f1f1f] shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              className="flex items-center gap-4 p-4 rounded-xl bg-[#111111] border border-[#111111] hover:border-[#37e5a5] hover:bg-[#1f1f1f] shadow-sm hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => onSelect(type)}
             >
               <div className="flex-shrink-0 p-2 bg-[#2c2c2c] rounded-full">

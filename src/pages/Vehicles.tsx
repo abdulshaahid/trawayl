@@ -23,13 +23,12 @@ const vehicles = [
     rating: 4.7,
     reviews: 203
   },
-  // Add more vehicles...
 ];
 
 export function Vehicles() {
   return (
     <div className="min-h-screen bg-background text-white pt-20 pb-24">
-      <div className="container mx-auto px-4 space-y-6">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-32 space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Tourist Vehicles</h1>
           <button className="flex items-center space-x-2 px-4 py-2 rounded-full bg-card hover:bg-card-hover">
@@ -51,7 +50,7 @@ export function Vehicles() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex flex-col space-y-8">
           {vehicles.map((vehicle) => (
             <VehicleCard key={vehicle.id} {...vehicle} />
           ))}
